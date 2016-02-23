@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<style>
+    footer {
+        bottom: 0;
+        left: 0;
+    }
+</style>
+
+<head>
+    <title>dngn</title>
+    <script src="https://ondras.github.io/rot.js/rot.js"></script>
+    <script src="ana/game.js"></script>
+    <script src="ana/mob.js"></script>
+    <script src="ana/tile.js"></script>
+
+    <script src="ana/engine.js"></script>
+    <script src="ana/scheduler.js"></script>
+
+    <script src="ana/utils.js"></script>
+    <script src="ana/mapmaker.js"></script>
+    <script src="ana/rlmath.js"></script>
+    <script src="ana/room.js"></script>
+    <!--
+
+        <script src="dngn/combat.js"></script>
+        -->
+</head>
+
+<body onload="Game.init()">
+    <h1>dngn: el juego</h1>
+    <p>
+        You need a keyboard to play this in its current state.
+        <br>You are the @ and the P is Pedro, the shopkeeper, who will chase you relentlessly as you try to steal his banana (the ananas).
+        <br>The ananas is hidden in a box at random.
+        <br>You move with the arrow keys.
+        <br>Press spacebar or enter to check a box while standing on it.
+        <br>The game ends when you find the ananas or when Pedro catches you.
+        <br>Refreshing the page starts a new game and generates a new map.
+        <br>
+    </p>
+</body>
+<!--
+    <footer>
+        <p>
+        Originally based on the Ananas aus Caracas game from the rot.js tutorial at roguebasin.
+        </p>
+    </footer>
+    -->
+
+</html>

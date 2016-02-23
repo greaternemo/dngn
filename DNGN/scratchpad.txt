@@ -1,0 +1,125 @@
+Rough breakdown
+CAIN: Competitive Adversarial Intelligence Network
+    manages mobs
+ABEL: Adaptive Battlefield Experience Logic
+    maintains upkeep of entities
+ADAM: Action-Driven Aasdfasdf Monitor
+    handles the game loop
+EVE: lol maybe something
+
+-----
+
+loop:
+    get next mob
+    mob action
+        action is handled
+        effects of action are handled
+        screen is denoted for update
+    abel performs upkeep
+    draw anything that needs to be drawn
+    
+
+-----
+
+Game
+
+Game.Scheduler
+
+Game.Engine
+
+Game.actionEngine(?)
+Game.Action
+
+Game.renderEngine(?)
+Game.Renderer
+
+Game.Entity
+
+Game.Display
+Game.Display.Screen
+Game.Display.Screen.Pane
+Game.Display.Screen.Pane.Map
+Game.Display.Screen.Pane.Log
+Game.Display.Screen.Pane.Stats
+Game.Display.Screen.Pane.Inventory
+
+Game.World
+Game.World.Zone
+Game.World.Zone.Area
+Game.World.Zone.Area.Map
+
+Game.Map
+Game.Map.Tile
+Game.Map.Room
+Game.Map.Dungeon
+Game.Map.Arena
+Game.Map.Maze
+Game.Map.Cave
+Game.Map.$TYPES
+
+Game.Mob
+Game.Mob.Player
+Game.Mob.$TYPES
+
+Game.Agent
+Game.Agent.Player
+Game.Agent.Cain
+Game.Agent.Abel
+Game.Agent.Adam
+Game.Agent.Outsider
+
+-----
+
+Mob stats:
+    (info)
+    type
+    class(?)
+    symbol
+    
+    (state)
+    name
+    title
+    inventory
+        {items}
+    reputation
+        {outsiders}
+    base
+        {HP
+        attack
+        defense/armor
+        speed
+        stamina/action points(?)
+        mana(?)
+        }
+        
+-----
+
+OK SCRATCH A LOT OF THIS
+WE'RE GOING ENTITY-COMPONENT WITH THIS MOTHER
+HNNNNNGGGG
+
+The Entity-Component system lets us use empty Entity objects as containers.
+In practice, types or classes of Entity are defined by their attributes, or
+parts, which contain encapsulated bits of functionality. The logic that will
+manipulate entities will be contained in Agent objects. 
+
+-----
+
+var base = [
+    "####.",
+    "###..",
+    "##...",
+    "#....",
+    ".....",
+];
+var noob = [];
+for (var i=0;i < base.length;i++) {
+    noob[i] = base[i].split("");
+};
+
+for (i=0;i < noob.length;i++) {
+    console.log(noob[i]);
+};
+
+-----
+

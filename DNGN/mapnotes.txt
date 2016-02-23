@@ -1,0 +1,116 @@
+map process:
+
+4x5 room grid?
+
+types:
+0  open ?
+1  open R, L
+2  open R, L, B
+3  open R, L, T
+4  
+5  
+6  
+7  
+8  
+9  
+
+gen process:
+
+use x, y coords, ugh, arrays why
+
+room map
+    0 [ {x:0,y:0,sides:[R,B]}, 1, 2, 3, 4]
+    1 [ 0, 1, 2, 3, 4]
+    2 [ 0, 1, 2, 3, 4]
+    3 [ 0, 1, 2, 3, 4]
+    
+{
+    x: 0,
+    y: 0,
+    sides: ["R", "B"],
+    walked: false,
+    entry: false,
+    exit: false,
+    type: 1,
+}
+
+if floor 1,
+    choose cell 2, 3
+    set entryway flag on that cell
+else
+    choose exit room cell from previous floor
+    set entryway flag on that cell
+    
+// need to differentiate between odd and even floors
+// for odd floors, we'll be building the map down from x, 0
+// for even floors, we'll be building the map up from x, 3
+if floor# % 2 == 1
+    mark build flags odd
+else 
+    mark build flags even
+
+function determine sides(cell)
+    {create temp map {r:true, l:true, t:true, b:true}
+    if cell.x == 0
+        temp.l == false
+    if cell.x == 4
+        temp.r == false
+    if cell.y == 0
+        temp.t == false
+    if cell.y == 3
+        temp.b == false
+    create sides array
+    for direction in temp
+        if temp.direction = true
+            sides.push(direction)
+    return sides}
+    
+function check liberties(cell)
+    {create sides array
+    for i=0,i>cell.sides.length,i++
+        switch cell.sides[i]
+            case R
+                if room map[y][x+1].walked !== true
+                    sides.push(R)
+            case L
+                if room map[y][x-1].walked !== true
+                    sides.push(L)
+            case T
+                if room map[y-1][x].walked !== true
+                    sides.push(T)
+            case B
+                if room map[y+1][x].walked !== true
+                    sides.push(B)
+    return sides}
+
+function pick direction(cell)
+    {liberties = check liberties(cell)
+    if liberties.length == 0
+        return false
+    direction = random int between 1 and liberties.length, inclusive
+    return cell.sides[direction-1]}
+
+function room walker()
+    {
+    
+    }
+
+function generate room(type)
+    {return random room of type}
+
+function generate movement deltas(build flag)
+    {if build flag == odd
+        set movement delta to y = 1
+     else if build flag == even
+        set movement delta to y = -1}
+
+function determine room(build flag)
+    {}
+
+basic room types:
+0: 
+1: single door (entrance, exit, special?)
+2: 
+3: 
+4: 
+
