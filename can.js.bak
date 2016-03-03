@@ -1,0 +1,220 @@
+var Game = {
+    intv: (1000 / 30),
+    can: {
+        w: 550,
+        h: 550
+    },
+    spr: {
+        w: 32,
+        h: 32,
+        wall: {
+            x: 0,
+            y: 0
+        },
+        floor: {
+            x: 32,
+            y: 0
+        },
+        man: {
+            x: 64,
+            y: 0
+        },
+    },
+    dWalls: {
+        size: {
+            w: 11,
+            h: 11,
+        },
+        rows: [0, 10],
+        cols: [0, 10],
+    },
+};
+
+Game.genSprite = function(mats) {
+    return new Image({
+        //src: '../../smm/img/smb3_elements.png',
+        //src: 'lofi_environment.png',
+        //src: 'testsheet.png',
+        //width: Game.sprites.w,
+        //height: Game.sprites.h,
+    })
+};
+
+Game.init = function() {
+    var canvas = document.getElementById('playArea').getContext('2d');
+    var mobArea = document.getElementById('mobArea');
+    var mArea = mobArea.getContext('2d');
+    var sheet = Game.genSprite();
+    var aRow = 0;
+    var cRow = 0;
+    var dRow = 0;
+    var aCol = 0;
+    var cCol = 0;
+    var dCol = 0;
+    var here = {
+        x: 1,
+        y: 1,
+    };
+    sheet.onload = function() {
+        // draw floor tiles on the whole thing
+        for (aCol = 0; aCol < Game.dWalls.size.w; aCol++) {
+            for (aRow = 0; aRow < Game.dWalls.size.h; aRow++) {
+                canvas.drawImage(sheet,
+                    Game.spr.floor.x, Game.spr.floor.y,
+                    Game.spr.w, Game.spr.h,
+                    (aCol * Game.spr.w), (aRow * Game.spr.h),
+                    Game.spr.w, Game.spr.h);
+            }
+        }
+        for (cRow = 0; cRow < Game.dWalls.rows.length; cRow++) {
+            for (dRow = 0; dRow < 11; dRow++) {
+                canvas.drawImage(sheet,
+                    Game.spr.wall.x, Game.spr.wall.y,
+                    Game.spr.w, Game.spr.h,
+                    (Game.dWalls.rows[cRow] * Game.spr.w), (dRow * Game.spr.h),
+                    Game.spr.w, Game.spr.h);
+            }
+        }
+        for (cCol = 0; cCol < Game.dWalls.cols.length; cCol++) {
+            for (dCol = 0; dCol < 11; dCol++) {
+                canvas.drawImage(sheet,
+                    Game.spr.wall.x, Game.spr.wall.y,
+                    Game.spr.w, Game.spr.h,
+                    (dCol * Game.spr.w), (Game.dWalls.cols[cCol] * Game.spr.h),
+                    Game.spr.w, Game.spr.h);
+            }
+        }
+        mArea.drawImage(sheet,
+            Game.spr.man.x, Game.spr.man.y,
+            Game.spr.w, Game.spr.h,
+            32, 32,
+            Game.spr.w, Game.spr.h);
+        canvas.drawImage(mobArea,
+            0, 0,
+            Game.can.w, Game.can.h,
+            0, 0,
+            Game.can.w, Game.can.h);
+        window.addEventListener('keydown', sheet);
+    };
+    sheet.src = 'testsheet.png';
+    sheet.handleEvent = function(e) {
+        var dx = 0;
+        var dy = 0;
+        var mVect = {
+            x: (here.x * Game.spr.w),
+            y: (here.y * Game.spr.h),
+        };
+        var there = {
+            x: 0,
+            y: 0
+        };
+        var mFlag = false;
+
+        var moveIntv;
+
+        function moveMob() {
+            //setInterval(redraw, Game.intv);
+            redraw();
+        }
+
+        function moveDone() {
+            clearInterval(moveIntv);
+            mFlag = false;
+            window.addEventListener('keydown', sheet);
+        }
+
+
+        function redraw() {
+            // Clear the tile we moved from and redraw it empty
+            mArea.clearRect(mVect.x, mVect.y,
+                Game.spr.w, Game.spr.h);
+
+            // Move the mVect for our frame
+            mVect.x += dx;
+            mVect.y += dy;
+
+            // Redraw the floor tile we're moving to and the floor tile we're moving from
+            canvas.drawImage(sheet,
+                Game.spr.floor.x, Game.spr.floor.y,
+                Game.spr.w, Game.spr.h,
+                (here.x * Game.spr.w), (here.y * Game.spr.h),
+                Game.spr.w, Game.spr.h);
+            canvas.drawImage(sheet,
+                Game.spr.floor.x, Game.spr.floor.y,
+                Game.spr.w, Game.spr.h,
+                (there.x * Game.spr.w), (there.y * Game.spr.h),
+                Game.spr.w, Game.spr.h);
+
+            // Redraw the player sprite at the new postiion and then WE'RE DONE HERE
+            mArea.drawImage(sheet,
+                Game.spr.man.x, Game.spr.man.y,
+                Game.spr.w, Game.spr.h,
+                mVect.x, mVect.y,
+                Game.spr.w, Game.spr.h);
+            canvas.drawImage(mobArea,
+                0, 0,
+                Game.can.w, Game.can.h,
+                0, 0,
+                Game.can.w, Game.can.h);
+
+
+            // Break the loop if we're done moving
+            if (((here.x * Game.spr.w) == mVect.x) && ((here.y * Game.spr.h) == mVect.y)) {
+                moveDone();
+            } else {
+                setTimeout(redraw, Game.intv);
+            }
+        }
+
+        // DON'T YOU DO A FUCKING THING UNTIL I TELL YOU WE'RE DONE HERE
+        window.removeEventListener('keydown', sheet);
+        console.log(e);
+        there.x += here.x;
+        there.y += here.y;
+
+        // Update the here coordinates to the new position based on the input we get
+        switch (e.code) {
+            case "ArrowUp":
+                if (here.y > 1) {
+                    dy = -1;
+                    mFlag = true;
+                } else {
+                    console.log("can't move up");
+                }
+                break;
+            case "ArrowRight":
+                if (here.x < 9) {
+                    dx = 1;
+                    mFlag = true;
+                } else {
+                    console.log("can't move right");
+                }
+                break;
+            case "ArrowDown":
+                if (here.y < 9) {
+                    dy = 1;
+                    mFlag = true;
+                } else {
+                    console.log("can't move down");
+                }
+                break;
+            case "ArrowLeft":
+                if (here.x > 1) {
+                    dx = -1;
+                    mFlag = true;
+                } else {
+                    console.log("cant move left");
+                }
+                break;
+        }
+        if (mFlag === true) {
+            here.x += dx;
+            here.y += dy;
+            dx *= 4;
+            dy *= 4;
+            moveMob();
+        } else {
+            window.addEventListener('keydown', sheet);
+        }
+    }
+};

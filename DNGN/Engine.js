@@ -35,6 +35,6 @@ DNGN.Engine.prototype.resume = function() {
         // Game.renderEngine.draw();
         
     }
-    return this;
+    //return this;
 };
 
